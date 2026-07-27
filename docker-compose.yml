@@ -6,6 +6,8 @@ services:
       context: ./server
     container_name: wayne-server
     restart: unless-stopped
+    env_file:
+      - ./server/.env
     environment:
       - PORT=4000
     volumes:

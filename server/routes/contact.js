@@ -19,6 +19,52 @@ async function writeSubmissions(list) {
   await fs.writeFile(STORE_PATH, JSON.stringify(list, null, 2));
 }
 
+async function sendNotificationEmail(entry) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const toEmail = process.env.CONTACT_NOTIFY_EMAIL;
+  const fromEmail = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
+
+  // If email isn't configured yet, just skip silently — the submission is
+  // still saved to disk either way, so nothing is lost.
+  if (!apiKey || !toEmail) {
+    console.log('Email not configured (RESEND_API_KEY / CONTACT_NOTIFY_EMAIL missing) — skipping email notification.');
+    return;
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        from: `Wayne E Solutions Website <${fromEmail}>`,
+        to: [toEmail],
+        reply_to: entry.email,
+        subject: `New contact form submission — ${entry.firstName} ${entry.lastName}`,
+        html: `
+          <h2>New website contact form submission</h2>
+          <p><strong>Name:</strong> ${entry.firstName} ${entry.lastName}</p>
+          <p><strong>Email:</strong> ${entry.email}</p>
+          <p><strong>Phone:</strong> ${entry.phone || '—'}</p>
+          <p><strong>Message:</strong></p>
+          <p>${entry.message.replace(/\n/g, '<br>')}</p>
+          <hr>
+          <p style="color:#888;font-size:12px">Received ${entry.receivedAt}</p>
+        `,
+      }),
+    });
+
+    if (!response.ok) {
+      const body = await response.text();
+      console.error('Resend API error:', response.status, body);
+    }
+  } catch (err) {
+    console.error('Failed to send notification email:', err);
+  }
+}
+
 router.post('/', async (req, res) => {
   const { firstName, lastName, email, phone, message } = req.body || {};
 
@@ -40,9 +86,9 @@ router.post('/', async (req, res) => {
     submissions.push(entry);
     await writeSubmissions(submissions);
 
-    // NOTE: This currently only saves the submission to server/data/submissions.json.
-    // To get an email/Slack notification for each new lead, plug in a mail
-    // provider (e.g. Resend, SendGrid) or a webhook call here.
+    // Fire-and-forget — don't make the person wait on email delivery,
+    // and don't fail the request just because the email step had trouble.
+    sendNotificationEmail(entry);
 
     return res.status(200).json({ ok: true });
   } catch (err) {

@@ -75,8 +75,27 @@ Runs on `http://localhost:5173` and proxies `/api/*` calls to the backend
   quote once you have one you're happy sharing.
 - **Team section:** roles are shown without names in `About.jsx` — add names
   if you want them public.
-- **Contact form delivery:** wire an email provider into
-  `server/routes/contact.js` so submissions reach an inbox, not just a file.
+- **Contact form email notifications:** already wired via Resend — see
+  "Email notifications for the contact form" below to turn it on.
+
+## Email notifications for the contact form
+
+Every submission is always saved to `server/data/submissions.json`.
+To also get an email each time someone submits the form:
+
+1. Sign up free at **resend.com** and verify you can send from a test address.
+2. Get your API key (Resend dashboard → API Keys).
+3. On the server, create `server/.env` (copy `server/.env.example`) and fill in:
+   ```
+   RESEND_API_KEY=re_your_key_here
+   CONTACT_NOTIFY_EMAIL=hello@wayneesolutions.com
+   ```
+4. Restart the backend so it picks up the new `.env`:
+   - Local: `npm run dev` (server folder)
+   - Docker: `docker compose up -d --build`
+
+Until `RESEND_API_KEY` is set, the site works exactly as before — the
+submission is just saved to the file, no email is sent, no errors.
 
 ## Deploying to AWS
 
