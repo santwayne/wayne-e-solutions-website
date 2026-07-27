@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  server:
+    build:
+      context: ./server
+    container_name: wayne-server
+    restart: unless-stopped
+    environment:
+      - PORT=4000
+    volumes:
+      - server-data:/app/data
+    expose:
+      - "4000"
+
+  client:
+    build:
+      context: ./client
+    container_name: wayne-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "80:80"
+
+volumes:
+  server-data:

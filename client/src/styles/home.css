@@ -1,0 +1,304 @@
+/* ---------- Hero ---------- */
+.hero {
+  position: relative;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero__bg {
+  position: absolute;
+  inset: -30px;
+  background:
+    linear-gradient(160deg, rgba(18, 18, 43, 0.92), rgba(18, 18, 43, 0.86)),
+    repeating-linear-gradient(45deg, rgba(200, 155, 60, 0.06) 0, rgba(200, 155, 60, 0.06) 1px, transparent 1px, transparent 26px),
+    radial-gradient(circle at 78% 22%, rgba(29, 138, 138, 0.35), transparent 45%),
+    radial-gradient(circle at 15% 85%, rgba(181, 83, 60, 0.3), transparent 40%),
+    #12122b;
+}
+
+.hero__grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 32px;
+  align-items: center;
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
+
+.hero__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hero__art {
+  display: flex;
+  justify-content: center;
+}
+
+.hero-illustration {
+  width: 100%;
+  max-width: 420px;
+  height: auto;
+}
+
+.hero__title {
+  font-size: clamp(32px, 4.6vw, 54px);
+  color: var(--text-on-dark);
+  margin-top: 10px;
+}
+
+.hero__sub {
+  font-size: 17px;
+  color: var(--text-on-dark-dim);
+  max-width: 54ch;
+}
+
+.hero__actions {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* ---------- About teaser ---------- */
+.about-teaser__inner {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 48px;
+  align-items: center;
+}
+
+.about-teaser__text h2 {
+  font-size: clamp(24px, 3vw, 32px);
+  margin: 12px 0 16px;
+}
+
+.about-teaser__text p {
+  color: var(--text-on-light-dim);
+  max-width: 56ch;
+  margin-bottom: 18px;
+}
+
+.about-teaser__link {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--rust);
+}
+
+.about-teaser__panel {
+  background: var(--paper-soft);
+  border: 1px solid var(--line-on-light);
+  border-radius: var(--radius);
+  padding: 48px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+}
+
+.about-teaser__panel-label {
+  font-family: var(--font-display);
+  font-size: 64px;
+  color: var(--gold);
+}
+
+.about-teaser__panel-caption {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-on-light-dim);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Benefits ---------- */
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 40px;
+}
+
+.section-head--center {
+  align-items: center;
+  text-align: center;
+}
+
+.section-head h2 {
+  font-size: clamp(26px, 3vw, 34px);
+}
+
+.benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.benefit-card {
+  background: var(--paper);
+  border: 1px solid var(--line-on-light);
+  border-radius: var(--radius);
+  padding: 30px 24px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.benefit-card__icon {
+  color: var(--gold);
+  margin-bottom: 6px;
+}
+
+.benefit-card h3 {
+  font-size: 17px;
+}
+
+.benefit-card p {
+  font-size: 14px;
+  color: var(--text-on-light-dim);
+}
+
+/* ---------- Services ---------- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+.services-grid__item {
+  border-top: 2px solid var(--rust);
+  padding-top: 16px;
+}
+
+.services-grid__item h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.services-grid__item p {
+  font-size: 14px;
+  color: var(--text-on-light-dim);
+}
+
+/* ---------- Products preview ---------- */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.section-cta {
+  margin-top: 36px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ---------- Testimonial ---------- */
+.testimonial__inner {
+  max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.testimonial blockquote {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-style: italic;
+  color: var(--text-on-light);
+}
+
+.testimonial__name {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-on-light-dim);
+}
+
+.testimonial__author {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.photo-slot.testimonial__avatar {
+  width: 44px;
+  border-radius: 50%;
+}
+
+/* ---------- CTA banner ---------- */
+.cta-banner {
+  background: var(--ink);
+}
+
+.cta-banner__inner {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+.cta-banner__inner h2 {
+  color: var(--text-on-dark);
+  font-size: clamp(26px, 3vw, 36px);
+}
+
+.cta-banner__inner p {
+  color: var(--text-on-dark-dim);
+}
+
+@media (max-width: 900px) {
+  .hero__grid {
+    grid-template-columns: 1fr;
+  }
+  .hero__art {
+    order: -1;
+  }
+  .hero-illustration {
+    max-width: 240px;
+  }
+}
+
+@media (max-width: 860px) {
+  .about-teaser__inner {
+    grid-template-columns: 1fr;
+  }
+  .benefits-grid,
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .product-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  .benefits-grid,
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero__grid {
+    padding-top: 32px;
+    padding-bottom: 36px;
+    gap: 24px;
+  }
+  .hero-illustration {
+    max-width: 180px;
+  }
+  .hero__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero__actions .btn {
+    justify-content: center;
+  }
+}

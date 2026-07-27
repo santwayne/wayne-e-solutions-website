@@ -1,0 +1,119 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.96);
+  border-bottom: 1px solid var(--line-on-light);
+  backdrop-filter: blur(6px);
+}
+
+.navbar--scrolled {
+  box-shadow: 0 6px 20px rgba(18, 18, 43, 0.06);
+}
+
+.navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.navbar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-on-light);
+}
+
+.navbar__logo-mark {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.03em;
+}
+
+.navbar__logo-text {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 16px;
+  letter-spacing: 0.01em;
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.navbar__link {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-on-light-dim);
+  padding: 6px 0;
+}
+
+.navbar__link:hover {
+  color: var(--text-on-light);
+}
+
+.navbar__link--active {
+  color: var(--text-on-light);
+}
+
+.navbar__cta {
+  padding: 10px 22px;
+}
+
+.navbar__toggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-on-light);
+  padding: 6px;
+}
+
+@media (max-width: 860px) {
+  .navbar__toggle {
+    display: flex;
+  }
+
+  .navbar__links {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--paper);
+    border-bottom: 1px solid var(--line-on-light);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+  }
+
+  .navbar__links--open {
+    max-height: 420px;
+  }
+
+  .navbar__link,
+  .navbar__cta {
+    width: 100%;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--line-on-light);
+    border-radius: 0;
+  }
+
+  .navbar__link--active {
+    border-bottom: 1px solid var(--line-on-light);
+  }
+}

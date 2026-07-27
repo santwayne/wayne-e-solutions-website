@@ -1,0 +1,133 @@
+.about-hero {
+  padding-top: 72px;
+}
+
+.about-hero__grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.about-hero__shot {
+  max-width: 320px;
+}
+
+.about-hero h1 {
+  color: var(--text-on-light);
+  font-size: clamp(30px, 4vw, 46px);
+  max-width: 22ch;
+  margin: 14px 0 18px;
+}
+
+.about-hero p {
+  color: var(--text-on-light-dim);
+  max-width: 62ch;
+  font-size: 17px;
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 56px;
+  align-items: start;
+}
+
+.about-grid h2 {
+  font-size: clamp(24px, 3vw, 30px);
+  margin: 12px 0 18px;
+}
+
+.about-grid p {
+  color: var(--text-on-light-dim);
+  margin-bottom: 16px;
+  font-size: 16px;
+}
+
+.about-grid__side {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.about-illustration-wrap {
+  background: var(--paper-soft);
+  border-radius: var(--radius);
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.about-illustration {
+  width: 100%;
+  max-width: 260px;
+  height: auto;
+}
+
+.about-grid__values {
+  display: grid;
+  gap: 20px;
+}
+
+.value-card {
+  border-left: 2px solid var(--gold);
+  padding-left: 18px;
+}
+
+.value-card h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+.value-card p {
+  font-size: 14px;
+  color: var(--text-on-light-dim);
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.team-card {
+  background: var(--paper);
+  border: 1px solid var(--line-on-light);
+  border-radius: var(--radius);
+  padding: 22px;
+}
+
+.photo-slot.team-card__avatar {
+  width: 56px;
+  margin-bottom: 14px;
+  border-radius: 50%;
+}
+
+.team-card__role {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--rust);
+}
+
+.team-card p {
+  margin-top: 8px;
+  font-size: 14px;
+  color: var(--text-on-light-dim);
+}
+
+@media (max-width: 860px) {
+  .about-grid {
+    grid-template-columns: 1fr;
+  }
+  .team-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .team-grid {
+    grid-template-columns: 1fr;
+  }
+}
