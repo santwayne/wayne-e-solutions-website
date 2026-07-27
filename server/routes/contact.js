@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import fs from 'fs/promises';
 import path from 'path';
+import nodemailer from 'nodemailer';
 
 const router = Router();
 const STORE_PATH = path.resolve('data', 'submissions.json');
@@ -19,49 +20,76 @@ async function writeSubmissions(list) {
   await fs.writeFile(STORE_PATH, JSON.stringify(list, null, 2));
 }
 
-async function sendNotificationEmail(entry) {
-  const apiKey = process.env.RESEND_API_KEY;
-  const toEmail = process.env.CONTACT_NOTIFY_EMAIL;
-  const fromEmail = process.env.CONTACT_FROM_EMAIL || 'onboarding@resend.dev';
+function createTransporter() {
+  return nodemailer.createTransport({
+    host: process.env.SMTP_HOST || 'smtp.gmail.com',
+    port: Number(process.env.SMTP_PORT) || 587,
+    secure: process.env.SMTP_SECURE === 'true', // true for port 465
+    auth: {
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    },
+  });
+}
 
-  // If email isn't configured yet, just skip silently — the submission is
-  // still saved to disk either way, so nothing is lost.
-  if (!apiKey || !toEmail) {
-    console.log('Email not configured (RESEND_API_KEY / CONTACT_NOTIFY_EMAIL missing) — skipping email notification.');
+async function sendNotificationEmail(entry) {
+  const toEmail = process.env.CONTACT_NOTIFY_EMAIL;
+  const fromEmail = process.env.SMTP_USER;
+
+  if (!fromEmail || !toEmail || !process.env.SMTP_PASS) {
+    console.log('SMTP not configured (SMTP_USER / SMTP_PASS / CONTACT_NOTIFY_EMAIL missing) — skipping email.');
     return;
   }
 
-  try {
-    const response = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        from: `Wayne E Solutions Website <${fromEmail}>`,
-        to: [toEmail],
-        reply_to: entry.email,
-        subject: `New contact form submission — ${entry.firstName} ${entry.lastName}`,
-        html: `
-          <h2>New website contact form submission</h2>
-          <p><strong>Name:</strong> ${entry.firstName} ${entry.lastName}</p>
-          <p><strong>Email:</strong> ${entry.email}</p>
-          <p><strong>Phone:</strong> ${entry.phone || '—'}</p>
-          <p><strong>Message:</strong></p>
-          <p>${entry.message.replace(/\n/g, '<br>')}</p>
-          <hr>
-          <p style="color:#888;font-size:12px">Received ${entry.receivedAt}</p>
-        `,
-      }),
-    });
+  const transporter = createTransporter();
 
-    if (!response.ok) {
-      const body = await response.text();
-      console.error('Resend API error:', response.status, body);
-    }
+  const mailOptions = {
+    from: `"Wayne E Solutions Website" <${fromEmail}>`,
+    to: toEmail,
+    replyTo: entry.email,
+    subject: `New contact form submission — ${entry.firstName} ${entry.lastName}`,
+    html: `
+      <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:24px;border:1px solid #e5e7eb;border-radius:8px;">
+        <h2 style="color:#1a1a1a;margin-top:0;">New Contact Form Submission</h2>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;width:120px;vertical-align:top;"><strong>Name</strong></td>
+            <td style="padding:8px 0;color:#1a1a1a;">${entry.firstName} ${entry.lastName}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;vertical-align:top;"><strong>Email</strong></td>
+            <td style="padding:8px 0;"><a href="mailto:${entry.email}" style="color:#2563eb;">${entry.email}</a></td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;vertical-align:top;"><strong>Phone</strong></td>
+            <td style="padding:8px 0;color:#1a1a1a;">${entry.phone || '—'}</td>
+          </tr>
+          <tr>
+            <td style="padding:8px 0;color:#6b7280;vertical-align:top;"><strong>Message</strong></td>
+            <td style="padding:8px 0;color:#1a1a1a;">${entry.message.replace(/\n/g, '<br>')}</td>
+          </tr>
+        </table>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:20px 0;">
+        <p style="color:#9ca3af;font-size:12px;margin:0;">Received ${entry.receivedAt}</p>
+      </div>
+    `,
+    text: `
+New Contact Form Submission
+---------------------------
+Name:    ${entry.firstName} ${entry.lastName}
+Email:   ${entry.email}
+Phone:   ${entry.phone || '—'}
+Message: ${entry.message}
+
+Received: ${entry.receivedAt}
+    `.trim(),
+  };
+
+  try {
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.messageId);
   } catch (err) {
-    console.error('Failed to send notification email:', err);
+    console.error('Failed to send email:', err.message);
   }
 }
 
@@ -86,8 +114,6 @@ router.post('/', async (req, res) => {
     submissions.push(entry);
     await writeSubmissions(submissions);
 
-    // Fire-and-forget — don't make the person wait on email delivery,
-    // and don't fail the request just because the email step had trouble.
     sendNotificationEmail(entry);
 
     return res.status(200).json({ ok: true });
